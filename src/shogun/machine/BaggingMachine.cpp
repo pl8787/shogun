@@ -14,35 +14,30 @@
 using namespace shogun;
 
 CBaggingMachine::CBaggingMachine()
-	: CMachine(),
-	m_features(NULL),
-	m_num_bags(0),
-	m_bag_size(0)
+	: CMachine()
 {
+	init();
 	register_parameters();
 }
 
 CBaggingMachine::CBaggingMachine(CFeatures* features, CLabels* labels)
-	: CMachine(),
-	m_num_bags(0),
-	m_bag_size(0)
+	: CMachine()
 {
+	init();
+	register_parameters();
+
 	set_labels(labels);
+
 	SG_REF(m_features);
 	m_features = features;
-	register_parameters();
 }
 
 CBaggingMachine::~CBaggingMachine()
 {
-	if (m_machine) {
-		SG_UNREF(m_machine);
-		m_machine = NULL;
-	}
-
-	if (m_features) {
-		SG_UNREF(m_features);
-	}
+	SG_UNREF(m_machine);
+	m_machine = NULL;
+	SG_UNREF(m_features);
+	m_features = NULL;
 }
 
 CLabels* CBaggingMachine::apply(CFeatures* data)
@@ -95,6 +90,7 @@ bool CBaggingMachine::train_machine(CFeatures* data)
 	for (int32_t i = 0; i < m_num_bags; ++i)
 	{
 		CMachine* c = dynamic_cast<CMachine*>(m_machine->clone());
+		ASSERT(c != NULL);
 		SGVector<index_t> idx(m_bag_size);
 		idx.random(0, m_features->get_num_vectors());
 		m_features->add_subset(idx);
@@ -150,4 +146,11 @@ void CBaggingMachine::set_machine(CMachine* machine)
 
 	SG_REF(machine);
 	m_machine = machine;
+}
+
+void CBaggingMachine::init()
+{
+	m_features = NULL;
+	m_num_bags = 0;
+	m_bag_size = 0;
 }

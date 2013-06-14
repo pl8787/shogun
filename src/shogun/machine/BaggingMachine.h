@@ -8,8 +8,8 @@
  * Copyright (C) 2013 Viktor Gal
  */
 
-#ifndef __BAGGINGMACHINE_H__
-#define __BAGGINGMACHINE_H__
+#ifndef BAGGINGMACHINE_H
+#define BAGGINGMACHINE_H
 
 #include <shogun/machine/Machine.h>
 
@@ -90,6 +90,7 @@ namespace shogun
 
 		private:
 			void register_parameters();
+			void init();
 
 		private:
 			/** bags array */
@@ -109,4 +110,4 @@ namespace shogun
 	};
 }
 
-#endif /* __BAGGINGMACHINE_H__ */
+#endif /* BAGGINGMACHINE_H */
